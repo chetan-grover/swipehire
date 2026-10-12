@@ -1,0 +1,68 @@
+<%-- Shared page header: included statically at the top of every page. Set pageTitle and activeNav before including. --%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="f" uri="urn:swipehire:functions" %>
+<%@ taglib prefix="sh" tagdir="/WEB-INF/tags" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><c:out value="${empty pageTitle ? 'SwipeHire' : pageTitle.concat(' · SwipeHire')}"/></title>
+    <link rel="stylesheet" href="${ctx}/static/css/app.css">
+</head>
+<body data-ctx="${ctx}" <c:if test="${not empty me}">data-ws="1"</c:if>>
+<header class="topbar">
+    <div class="inner">
+        <a class="brand" href="${ctx}/">Swipe<span>Hire</span></a>
+        <nav class="nav">
+            <c:choose>
+                <c:when test="${me.role == 'APPLICANT'}">
+                    <a href="${ctx}/applicant/deck" class="${activeNav == 'deck' ? 'active' : ''}">Discover</a>
+                    <a href="${ctx}/applicant/matches" class="${activeNav == 'matches' ? 'active' : ''}">My Matches</a>
+                    <a href="${ctx}/applicant/profile" class="${activeNav == 'profile' ? 'active' : ''}">Profile</a>
+                    <a href="${ctx}/applicant/skills" class="${activeNav == 'skills' ? 'active' : ''}">Skills</a>
+                    <a href="${ctx}/applicant/resume" class="${activeNav == 'resume' ? 'active' : ''}">Resume</a>
+                    <a href="${ctx}/applicant/verify" class="${activeNav == 'verify' ? 'active' : ''}">Verify</a>
+                    <a href="${ctx}/applicant/insights" class="${activeNav == 'insights' ? 'active' : ''}">Insights</a>
+                </c:when>
+                <c:when test="${me.role == 'HIRER'}">
+                    <a href="${ctx}/hirer/dashboard" class="${activeNav == 'dashboard' ? 'active' : ''}">Dashboard</a>
+                    <a href="${ctx}/hirer/jobs/new" class="${activeNav == 'newjob' ? 'active' : ''}">Post a job</a>
+                    <a href="${ctx}/hirer/company" class="${activeNav == 'company' ? 'active' : ''}">Company</a>
+                </c:when>
+                <c:when test="${me.role == 'ADMIN'}">
+                    <a href="${ctx}/admin" class="${activeNav == 'admin' ? 'active' : ''}">Overview</a>
+                    <a href="${ctx}/admin/companies" class="${activeNav == 'companies' ? 'active' : ''}">Companies</a>
+                    <a href="${ctx}/admin/colleges" class="${activeNav == 'colleges' ? 'active' : ''}">Colleges</a>
+                    <a href="${ctx}/admin/users" class="${activeNav == 'users' ? 'active' : ''}">Users</a>
+                    <a href="${ctx}/admin/jobs" class="${activeNav == 'jobs' ? 'active' : ''}">Jobs</a>
+                    <a href="${ctx}/admin/skills" class="${activeNav == 'skills' ? 'active' : ''}">Skills</a>
+                    <a href="${ctx}/admin/audit" class="${activeNav == 'audit' ? 'active' : ''}">Audit</a>
+                </c:when>
+            </c:choose>
+        </nav>
+        <div class="userbox">
+            <c:choose>
+                <c:when test="${not empty me}">
+                    <a class="bell" href="${ctx}/notifications" title="Notifications">&#128276;<span class="count" id="notif-count" ${unreadCount == 0 ? 'data-zero' : ''}>${unreadCount}</span></a>
+                    <span><c:out value="${me.fullName}"/></span>
+                    <form class="inline" method="post" action="${ctx}/logout"><sh:csrf/><button class="linkbtn">Log out</button></form>
+                </c:when>
+                <c:otherwise>
+                    <a class="btn small ghost on-dark" href="${ctx}/login">Log in</a>
+                    <a class="btn small clay" href="${ctx}/signup">Sign up</a>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </div>
+</header>
+<main class="container">
+    <c:if test="${not empty matchFlash}"><div class="alert match">&#127881; <c:out value="${matchFlash}"/></div></c:if>
+    <c:if test="${not empty flash}"><div class="alert ok"><c:out value="${flash}"/></div></c:if>
+    <c:if test="${not empty error}"><div class="alert err"><c:out value="${error}"/></div></c:if>
+    <c:if test="${not empty sessionScope.servletError}">
+        <div class="alert err"><c:out value="${sessionScope.servletError}"/></div>
+        <c:remove var="servletError" scope="session"/>
+    </c:if>

@@ -1,0 +1,25 @@
+<%-- Chat thread for a match. Expects: messages, app (Application), me. Sending is a plain form POST. --%>
+<div class="card" id="chat">
+    <h2 style="margin-top:0">Chat</h2>
+    <div class="chat" id="chat-${app.match.id}">
+        <c:forEach var="m" items="${messages}">
+            <div class="msg ${m.sender.id == me.id ? 'mine' : ''}">
+                <div class="meta"><c:out value="${m.sender.fullName}"/> &middot; ${f:dateTime(m.sentAt)}</div>
+                <div class="body"><c:out value="${m.body}"/></div>
+            </div>
+        </c:forEach>
+        <c:if test="${empty messages}"><p class="muted small" style="margin:8px">No messages yet. Say hello!</p></c:if>
+    </div>
+    <c:choose>
+        <c:when test="${app.status == 'EXPIRED' || app.status == 'WITHDRAWN'}">
+            <p class="muted small">This conversation is closed.</p>
+        </c:when>
+        <c:otherwise>
+            <form method="post" action="${ctx}/chat/${app.match.id}" class="row">
+                <sh:csrf/>
+                <input type="text" name="body" maxlength="2000" placeholder="Write a message..." required style="flex:1">
+                <button class="btn">Send</button>
+            </form>
+        </c:otherwise>
+    </c:choose>
+</div>

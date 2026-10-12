@@ -1,0 +1,5 @@
+<%-- Shared page footer. --%>
+</main>
+<script src="${ctx}/static/js/app.js"></script>
+</body>
+</html>

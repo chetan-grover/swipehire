@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.swipehire</groupId>
+        <artifactId>swipehire-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>swipehire-engine</artifactId>
+    <name>SwipeHire Match Engine</name>
+    <description>Standalone JVM exposing the scoring/ranking engine over Java RMI.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.swipehire</groupId>
+            <artifactId>swipehire-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- `mvn -pl swipehire-engine exec:java` starts the RMI server. -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.swipehire.engine.EngineServer</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
